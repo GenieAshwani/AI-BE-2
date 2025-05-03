@@ -2,7 +2,7 @@
 FROM maven:3.6.3-openjdk-8 AS build
 
 WORKDIR /app
-COPY AI-BE-2/GenieAi/pom.xml .          # Make sure this file is in your Git repo root
+COPY pom.xml .           # Make sure this file is in your Git repo root
 RUN mvn dependency:go-offline
 
 COPY . .                      # Copy source files
