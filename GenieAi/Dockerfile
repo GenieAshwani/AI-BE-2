@@ -1,9 +1,17 @@
-FROM openjdk:17-jdk-alpine
+# Stage 1: Build the app
+FROM eclipse-temurin:17-jdk-alpine as builder
 
-ARG JAR_FILE=target/*.jar
+WORKDIR /app
+COPY . .
 
-COPY ${JAR_FILE} app.jar
+RUN ./mvnw clean package -DskipTests
+
+# Stage 2: Run the app
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
