@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-apline
+FROM openjdk:17-jdk-alpine
 
 ARG JAR_FILE=target/*.jar
 
