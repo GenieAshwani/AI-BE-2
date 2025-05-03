@@ -2,13 +2,13 @@
 FROM maven:3.6.3-openjdk-8 AS build
 
 WORKDIR /app
-COPY pom.xml .           # Make sure this file is in your Git repo root
+COPY pom.xml .
 RUN mvn dependency:go-offline
 
-COPY . .                      # Copy source files
+COPY . .
 RUN mvn clean package -DskipTests
 
-# Stage 2: Use a smaller image to run
+# Stage 2: Use slim runtime image
 FROM openjdk:8-jdk-slim
 
 WORKDIR /app
