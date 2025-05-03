@@ -4,8 +4,6 @@ FROM eclipse-temurin:17-jdk-alpine as builder
 WORKDIR /app
 COPY . .
 
-RUN ./mvnw clean package -DskipTests
-
 # Stage 2: Run the app
 FROM eclipse-temurin:17-jdk-alpine
 
