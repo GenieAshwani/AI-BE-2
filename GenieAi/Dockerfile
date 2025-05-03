@@ -1,18 +1,28 @@
-# Stage 1: Use Maven to build the JAR
-FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+# Stage 1: Build the application using Maven and JDK 1.8
+FROM maven:3.6.3-openjdk-8 AS build
 
+# Set working directory inside the container
 WORKDIR /app
-COPY . .
 
-# Build the Spring Boot app
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy the entire project and build the JAR
+COPY . .
 RUN mvn clean package -DskipTests
 
-# Stage 2: Use lightweight runtime image
-FROM eclipse-temurin:17-jdk-alpine
+# Stage 2: Create a lightweight image for running the app
+FROM openjdk:8-jdk-slim
 
+# Set working directory
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
 
+# Expose application port
 EXPOSE 8080
 
+# Copy the built JAR from the build stage
+COPY --from=build /app/target/GenieAi-0.0.1-SNAPSHOT.jar app.jar
+
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
